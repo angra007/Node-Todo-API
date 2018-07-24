@@ -5,6 +5,7 @@ const {ObjectID} = require ('mongodb');
 var {mongoose} = require ('./db/mongoose');
 var {Todo} = require ('./models/Todo');
 var {User} = require ('./models/User');
+var {authenticate} = require ('./middleware/authenticate')
 
 const port = process.env.PORT | 3000;
 var app = express ();
@@ -55,8 +56,6 @@ app.get ('/todos/:id', (req, res) => {
 });
 
 app.post ('/user', (req, res) => {
-    
-
     var user = new User ({
         email : req.body.email,
         password : req.body.password
@@ -71,6 +70,14 @@ app.post ('/user', (req, res) => {
         res.status (400).send (error);
     });
 
+})
+
+
+
+
+
+app.get ('/user/me', authenticate, (req, res) => {
+    res.send (req.user);
 })
 
 
